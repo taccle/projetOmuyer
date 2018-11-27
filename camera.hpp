@@ -2,5 +2,5 @@
 #define CAMERA_HPP
 
 int direct();
-
+  
 #endif
