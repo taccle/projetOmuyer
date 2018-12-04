@@ -12,14 +12,14 @@ using namespace std;
 
 int main( int argc, char** argv )
 {
-// Read original image
-Mat src = imread("balle.png");
-//if fail to read the image
-if (!src.data)
-{
-cout << "Error loading the image" << endl;
-return -1;
-}
+  // Read original image
+  Mat src = imread("balle.jpg");
+  //if fail to read the image
+  if (!src.data)
+    {
+      cout << "Error loading the image" << endl;
+      return -1;
+    }
 
 Size size(412, 232);
 resize(src,src,size);
