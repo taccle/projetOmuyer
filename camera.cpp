@@ -24,6 +24,11 @@ int direct()
   createTrackbar("tolerance teinte", "test", &th, 80);
   createTrackbar("tolerance saturation", "test", &ts, 127);
 
+  int erosion = 1;
+  createTrackbar("erosion", "test", &erosion, 30);
+  int dilatation = 1;
+  createTrackbar("dilatation", "test", &dilatation, 30);
+  
   Mat frame;
   cout << "Start grabbing, press a key on Live window to terminate" << endl;
   while(1) {
@@ -47,14 +52,29 @@ int direct()
     float s = saturation*255.0/100;
     float tolerance = 3;
     Mat mask1(frame.size(), frame.depth(), 1);
-
+    Mat mask2(frame.size(), frame.depth(), 1);
+    
     int tsup = (teinte + th)%180;
-    int tinf = (teinte - th+360)%180;
+    int tinf = (teinte - th  + 360)%180;
+    int ssup = (saturation + ts)%256;
+    int sinf = (saturation - ts + 512)%256;
+
+    cout << "teinte" << "  " << (max(abs(tsup-tinf)/(tsup-tinf)*tinf, 0))  << "  à  " << tsup<< endl;
+    cout << "teinte" << "  " <<  tinf << "   à  "  << ((max(abs(tsup-tinf)/(tsup-tinf)*tsup, 0))+179)%180 << endl;
+
+    cout << "saturation" << "  " << (max(abs(ssup-sinf)/(ssup-sinf)*sinf, 0))  << "  à  " << ssup<< endl;
+    cout << "saturation" << "  " <<  sinf << "   à  "  << ((max(abs(ssup-sinf)/(ssup-sinf)*ssup, 0))+255)%256 << endl;
     
-    cout << "second" << "  " << ((max(abs(tsup-tinf)/(tsup-tinf)*tinf, 0)))  << "  à  " << tsup<< endl;
-    cout << "first" << "  " <<  tinf << "   à  "  << ((max(abs(tsup-tinf)/(tsup-tinf)*tsup, 0))+179)%180 << endl;
-    
-    //inRange(hsv, Scalar(tinf , 0, 0), Scalar((max(abs(tsup-tinf)/(tsup-tinf)*tsup,179)), 255, 255), mask1);
+    inRange(hsv, Scalar( (max(abs(tsup-tinf)/(tsup-tinf)*tinf, 0)),  (max(abs(ssup-sinf)/(ssup-sinf)*sinf, 0)), 0), Scalar(tsup, ssup, 255), mask1);
+    inRange(hsv, Scalar( tinf, sinf, 0), Scalar( ((max(abs(tsup-tinf)/(tsup-tinf)*tsup, 0))+179)%180, ((max(abs(ssup-sinf)/(ssup-sinf)*ssup, 0))+255)%256, 255), mask2);
+    add(mask1, mask2, iTraite);
+
+    Mat elDilat = getStructuringElement(MORPH_RECT, Size(dilatation, dilatation), Point(-1, -1));
+    Mat elErod = getStructuringElement(MORPH_RECT, Size(erosion, erosion), Point(-1, -1));
+
+    erode(iTraite, iTraite, elErod);
+    dilate(iTraite, iTraite, elDilat);
+		   
     //inRange(hsv, Scalar( , 0, 0), Scalar( , 255, 255), mask1);
      //cout << "teinte : " << teinte << endl;
     //cout << "saturation : " << saturation << endl;
@@ -69,11 +89,11 @@ int direct()
     //erode(mask1,mask1, element);
     //traitement pour transmission
     Mat iLive1;
-    //Size size(80,60); //640*480
-    //resize(mask1, iLive1, size);
+    Size size(160,120); //640*480
+    resize(iTraite, iTraite, size);
     Size size2(80, 60);
     resize(frame, frame, size2);
-    //imshow("1",iLive1);
+    imshow("Image Traitee",iTraite);
     imshow("reference", frame);
     int key = cv::waitKey(1);
     key = (key==255) ? -1 : key; //#Solve bug in 3.2.0
