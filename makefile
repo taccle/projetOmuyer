@@ -1,6 +1,6 @@
 CC = g++
-CFLAGS = -g -Wall
-SRCS = main.cpp camera.cpp
+CFLAGS = -g -Wall -pthread -std=c++11
+SRCS = main.cpp camera.cpp affichage.cpp traitement.cpp calculs.cpp Coordonnee.cpp
 PROG = exec
 
 OPENCV = `pkg-config opencv --cflags --libs`
