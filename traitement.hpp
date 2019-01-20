@@ -7,13 +7,15 @@
 #include <unistd.h>
 
 #include "traitement.hpp"
+#include "Coordonnee.hpp"
+#include "calculs.hpp"
 
 
 using namespace std;
 using namespace cv;
 
 Mat seuillage(Mat);
-int Hough(Mat, Mat*);
+void hough(Mat, Mat*, Coordonnee*, int, int);
 void redimensionnement(Mat*, int, int);
 
 

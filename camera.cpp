@@ -32,6 +32,7 @@ VideoCapture demarrerCamera(){
     cerr << "ERROR: Unable to open the camera" << endl;
     return 0;
   }
+
   return cap;
 }
 
@@ -48,4 +49,23 @@ int arreterCamera(VideoCapture cap){
   cap.release();
   destroyAllWindows();
   return 0;
+}
+
+void afficherVideo(string fenetre, Mat *pImage, bool taille){
+  //affiche les images
+  //redimensionnement à cause de la vitesse de transmission
+  if(taille){
+    redimensionnement(pImage, 160, 120);
+  }
+  imshow(fenetre, *pImage);
+  waitKey(1);
+}
+
+void trackBar(int* run, int* canny, int* hou){
+  // Permet d'arreter le programme en mettant run à 0
+  // Canny est paramètre pour la transformée de Hough
+  namedWindow("test",1);
+  createTrackbar("run", "test", run, 1);
+  createTrackbar("canny", "test", canny, 200);
+  createTrackbar("hou", "test", hou, 200);
 }

@@ -26,7 +26,7 @@ Mat seuillage(Mat image){
 }
 
 
-int Hough(Mat image, Mat* traitee){
+void hough(Mat image, Mat* traitee, Coordonnee* a, int canny, int hou){
   Mat gris;
   int rayon = 0;
   //copie du flux
@@ -45,12 +45,14 @@ int Hough(Mat image, Mat* traitee){
   //6 : paramètre pour le passage en canny
   //7 : petit/grand : détection facile/difficile
   //8/9 : plus petit/grand cercle
-  HoughCircles(gris, cercles, CV_HOUGH_GRADIENT,1,1000,100,33,14,80);
+  HoughCircles(gris, cercles, CV_HOUGH_GRADIENT,1,1000,canny,hou,0,100);
+  //ne prendre qu'un seul cercle ?
   for( size_t i = 0; i < cercles.size(); i++ )
   {
     //Récupération du centre et rayon
     Point centre(cvRound(cercles[i][0]), cvRound(cercles[i][1]));
     rayon = cercles[i][2];
+    //cout << "\a" << endl;
     //Tracé du cercle
     //3 : rayon
     //4 : couleur
@@ -58,9 +60,12 @@ int Hough(Mat image, Mat* traitee){
     //6 :
     circle( *traitee, centre, 10, Scalar(0,0,0), 3, 8, 0);
     circle( *traitee, centre, rayon, Scalar(255,0,255), 8, 0);
+    (*a).setY(cercles[0][0]);
+    (*a).setZ(cercles[0][1]);
    }
-   redimensionnement(traitee, 80, 60);
-   return rayon;
+  (*a).setX(rToD(rayon));
+
+
 }
 
 

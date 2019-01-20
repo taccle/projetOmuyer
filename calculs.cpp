@@ -2,16 +2,15 @@
 
 
 
-int distance(int rayon, vector<int>* dist){
+float rToD(int rayon){
+  float d = 0;
   if(rayon){
     //on a un rayon
-    cout << '\a';
-    (*dist).push_back(rayon);
-  }
-  else{
-    // pas de rayon
-
+    //2.5x*x+19.5x+50
+    d = (7.7908)*exp(-0.063*rayon);
+    //cout << '\a';
+    //(*dist).push_back(rayon);
   }
 
-  return 0;
+  return d;
 }

@@ -5,17 +5,23 @@
 #include <opencv2/opencv.hpp>
 #include <mutex>
 #include <unistd.h>
+#include <chrono>
+typedef std::chrono::high_resolution_clock Clock;
+
+#include "traitement.hpp"
+#include "Coordonnee.hpp"
 
 
 using namespace std;
 using namespace cv;
 
-extern mutex m;
 
 void initialiserCamera(VideoCapture, int, int, int);
 VideoCapture demarrerCamera();
 int arreterCamera(VideoCapture);
 void recuperationImage(VideoCapture, Mat*);
 void modif(int*);
+void afficherVideo(String, Mat*, bool);
+void trackBar(int*, int*, int*);
 
 #endif
